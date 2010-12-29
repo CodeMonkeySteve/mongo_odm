@@ -40,7 +40,7 @@ module MongoODM
   end
 
   def self.instanciate(value)
-    if value.is_a?(MongoODM::Document)
+    if value.is_a?(MongoODM::Document) || value.is_a?(MongoODM::Reference)
       value
     elsif value.is_a?(Hash) && (klass = value["_class"] || value[:_class])
       klass.constantize.new(value)
