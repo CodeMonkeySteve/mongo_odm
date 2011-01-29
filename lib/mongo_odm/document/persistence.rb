@@ -13,6 +13,10 @@ module MongoODM
           attributes[:_id]
         end
 
+        def to_param
+          id.to_s
+        end
+
         def new_record?
           id.nil?
         end
