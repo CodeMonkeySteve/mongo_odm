@@ -321,8 +321,8 @@ describe "Conversions" do
     describe "#to_mongo" do
 
       it "returns the time in UTC" do
-        @test = Time.local(4, 56, 8, 9, 4, 2003, 3, 99, true, "CDT")
-        @test.to_mongo.should == Time.utc(2003, 4, 9, 6, 56, 4)
+        @time = Time.zone.parse('2003-04-09 08:56:04 CDT')
+        @time.to_mongo.should == Time.utc(2003, 4, 9, 13, 56, 4)
       end
       
     end
