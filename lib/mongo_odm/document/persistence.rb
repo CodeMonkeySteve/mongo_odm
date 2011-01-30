@@ -43,6 +43,11 @@ module MongoODM
           end
         end
 
+        def save!(options = {})
+          valid? or raise Errors::Validation.new(self)
+          save(options)
+        end
+
         def update_attributes(attributes)
           self.attributes = attributes
           save

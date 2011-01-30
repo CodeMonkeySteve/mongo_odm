@@ -2,5 +2,21 @@
 require "spec_helper"
 
 describe MongoODM::Document::Persistence do
+  describe "#save!" do
+    class TestDocument < Shape
+      validates_presence_of :color
+    end
 
+    it "saves a document" do
+      doc = TestDocument.new :color => 'blue'
+      doc.should be_valid
+      proc {  doc.save!  }.should_not raise_error(MongoODM::Errors::Validation)
+    end
+
+    it "raises error on invalid document" do
+      doc = TestDocument.new :color => nil
+      doc.should_not be_valid
+      proc {  doc.save!  }.should raise_error(MongoODM::Errors::Validation)
+    end
+  end
 end

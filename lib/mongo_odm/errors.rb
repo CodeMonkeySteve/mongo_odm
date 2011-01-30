@@ -16,6 +16,13 @@ module MongoODM
       end
     end
 
+    class Validation < Error
+      attr_reader :document
+      def initialize( doc )
+        @document = doc
+      end
+    end
+
     class DocumentNotFound < Error
       attr_reader :klass, :ids
       def initialize( klass, ids )
