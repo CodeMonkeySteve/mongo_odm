@@ -2,6 +2,8 @@
 module MongoODM
 
   class Criteria
+    include Pagination
+
     delegate :to_a, :count, :collect, :map, :each, :all?, :include?, :to => :cursor
     delegate :inspect, :to_xml, :to_yaml, :length, :to => :to_a
 
@@ -54,7 +56,6 @@ module MongoODM
     end
 
   protected
-
     def cursor
       @cursor ||= @klass.collection.find(@selector, @opts)
     end

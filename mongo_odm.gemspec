@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Carlos Paramio"]
-  s.date = %q{2011-01-20}
+  s.date = %q{2011-02-12}
   s.description = %q{mongo_odm is a flexible persistence module for any Ruby class to MongoDB.}
   s.email = %q{carlos@evolve.st}
   s.extra_rdoc_files = [
@@ -40,12 +40,15 @@ Gem::Specification.new do |s|
     "lib/mongo_odm/document/callbacks.rb",
     "lib/mongo_odm/document/equality.rb",
     "lib/mongo_odm/document/fields.rb",
+    "lib/mongo_odm/document/indexes.rb",
     "lib/mongo_odm/document/inspect.rb",
     "lib/mongo_odm/document/persistence.rb",
     "lib/mongo_odm/document/timestamps.rb",
     "lib/mongo_odm/document/validations.rb",
     "lib/mongo_odm/errors.rb",
+    "lib/mongo_odm/pagination.rb",
     "lib/mongo_odm/railtie.rb",
+    "lib/mongo_odm/railties/database.rake",
     "lib/mongo_odm/version.rb",
     "spec/models/00-blank_slate.rb",
     "spec/models/01-shape.rb",
@@ -69,6 +72,7 @@ Gem::Specification.new do |s|
     "spec/mongo_odm/document/validations_spec.rb",
     "spec/mongo_odm/document_spec.rb",
     "spec/mongo_odm/mongo_odm_spec.rb",
+    "spec/mongo_odm/pagination_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/carlosparamio/mongo_odm}
@@ -98,6 +102,7 @@ Gem::Specification.new do |s|
     "spec/mongo_odm/document/validations_spec.rb",
     "spec/mongo_odm/document_spec.rb",
     "spec/mongo_odm/mongo_odm_spec.rb",
+    "spec/mongo_odm/pagination_spec.rb",
     "spec/spec_helper.rb"
   ]
 
@@ -110,65 +115,89 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.3"])
       s.add_runtime_dependency(%q<mongo>, ["~> 1.2.0"])
       s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_runtime_dependency(%q<will_paginate>, ["~> 3.0.pre"])
       s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3.24"])
+      s.add_development_dependency(%q<autotest>, [">= 0"])
+      s.add_development_dependency(%q<database_cleaner>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
       s.add_development_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_development_dependency(%q<watchr>, ["~> 0.7"])
+      s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.3"])
       s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.3"])
       s.add_runtime_dependency(%q<mongo>, ["~> 1.2.0"])
       s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_runtime_dependency(%q<will_paginate>, ["~> 3.0.pre"])
       s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3.24"])
+      s.add_development_dependency(%q<autotest>, [">= 0"])
+      s.add_development_dependency(%q<database_cleaner>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
       s.add_development_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_development_dependency(%q<watchr>, ["~> 0.7"])
+      s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
     else
       s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
       s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
       s.add_dependency(%q<mongo>, ["~> 1.2.0"])
       s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_dependency(%q<will_paginate>, ["~> 3.0.pre"])
       s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
+      s.add_dependency(%q<autotest>, [">= 0"])
+      s.add_dependency(%q<database_cleaner>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_dependency(%q<rcov>, ["~> 0.9.9"])
       s.add_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_dependency(%q<watchr>, ["~> 0.7"])
+      s.add_dependency(%q<ruby-debug19>, [">= 0"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
       s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
       s.add_dependency(%q<mongo>, ["~> 1.2.0"])
       s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_dependency(%q<will_paginate>, ["~> 3.0.pre"])
       s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
+      s.add_dependency(%q<autotest>, [">= 0"])
+      s.add_dependency(%q<database_cleaner>, [">= 0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_dependency(%q<rcov>, ["~> 0.9.9"])
       s.add_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_dependency(%q<yard>, ["~> 0.6.4"])
       s.add_dependency(%q<watchr>, ["~> 0.7"])
+      s.add_dependency(%q<ruby-debug19>, [">= 0"])
     end
   else
     s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
     s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
     s.add_dependency(%q<mongo>, ["~> 1.2.0"])
     s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+    s.add_dependency(%q<will_paginate>, ["~> 3.0.pre"])
     s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
+    s.add_dependency(%q<autotest>, [">= 0"])
+    s.add_dependency(%q<database_cleaner>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<yard>, ["~> 0.6.4"])
     s.add_dependency(%q<rcov>, ["~> 0.9.9"])
     s.add_dependency(%q<rspec>, ["= 2.4.0"])
+    s.add_dependency(%q<yard>, ["~> 0.6.4"])
     s.add_dependency(%q<watchr>, ["~> 0.7"])
+    s.add_dependency(%q<ruby-debug19>, [">= 0"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
     s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
     s.add_dependency(%q<mongo>, ["~> 1.2.0"])
     s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+    s.add_dependency(%q<will_paginate>, ["~> 3.0.pre"])
     s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
+    s.add_dependency(%q<autotest>, [">= 0"])
+    s.add_dependency(%q<database_cleaner>, [">= 0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<yard>, ["~> 0.6.4"])
     s.add_dependency(%q<rcov>, ["~> 0.9.9"])
     s.add_dependency(%q<rspec>, ["= 2.4.0"])
+    s.add_dependency(%q<yard>, ["~> 0.6.4"])
     s.add_dependency(%q<watchr>, ["~> 0.7"])
+    s.add_dependency(%q<ruby-debug19>, [">= 0"])
   end
 end
 

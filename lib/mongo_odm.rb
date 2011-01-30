@@ -16,6 +16,7 @@ module MongoODM
   autoload :Collection
   autoload :Document
   autoload :Errors
+  autoload :Pagination
 
   def self.connection
     Thread.current[:mongo_odm_connection] ||= config.connection

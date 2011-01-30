@@ -5,6 +5,7 @@ gem "activesupport", "~>3.0.3"
 gem "activemodel", "~>3.0.3"
 gem "mongo", "~>1.2.0"
 gem "bson_ext", "~>1.2.0"
+gem "will_paginate", "~> 3.0.pre"
 gem "tzinfo", "~>0.3.24"
 
 group :development do
