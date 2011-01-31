@@ -10,6 +10,7 @@ module MongoODM
     autoload :AttributeMethods
     autoload :Callbacks
     autoload :Fields
+    autoload :Finders
     autoload :Inspect
     autoload :Persistence
     autoload :Referable
@@ -25,6 +26,7 @@ module MongoODM
       include ActiveModel::Serializers::JSON
       include ActiveModel::Serializers::Xml
 
+      include Document::Finders
       include Document::Persistence
       include Document::AttributeMethods
       include Document::Fields

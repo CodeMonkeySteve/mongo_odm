@@ -1,3 +1,5 @@
+require 'active_support/core_ext/hash/indifferent_access'
+require 'active_support/core_ext/object/blank'
 require 'uri'
 
 module MongoODM
@@ -20,8 +22,8 @@ module MongoODM
       @host, @port, @username, @password = uri.host, uri.port, uri.user, uri.password
     end
 
-    def from_hash(opts)
-      opts = opts.dup.symbolize_keys!
+    def from_hash( opts )
+      opts = opts.with_indifferent_access
 
       if opts[:uri].present?
         self.uri = opts[:uri]
@@ -32,6 +34,15 @@ module MongoODM
 
       @logger ||= opts[:logger]
       @pool_size ||= opts[:pool_size]
+    end
+
+    def to_hash
+      conf = %w(database host port username password pool_size).map  do |k|
+        [ k.to_sym, self.send(k.to_sym) ]
+      end
+      conf = Hash[conf]
+      conf.reject! { |k, v|  v.nil? }
+      conf
     end
 
     def connection

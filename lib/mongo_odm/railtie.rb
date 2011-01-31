@@ -1,6 +1,12 @@
 module Rails #:nodoc:
   module MongoODM #:nodoc:
     class Railtie < Rails::Railtie #:nodoc:
+      config.generators.orm :mongo_odm, :migration => false
+
+      rake_tasks do
+        load 'mongo_odm/railties/database.rake'
+      end
+
       initializer 'configure database' do
         config_file = Rails.root.join 'config', 'mongo.yml'
         if config_file.file?
