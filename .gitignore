@@ -1,4 +1,7 @@
+Gemfile.lock
 doc
 pkg
-.rvmrc
+vendor/bundle
 .bundle
+.rvmrc
+.kdev4
