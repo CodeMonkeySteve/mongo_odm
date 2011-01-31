@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe MongoODM::Document::Finders do
   before do
-    @shapes = %w(red green blue).map { |color|  shape = Shape.new(:color => color) ; shape.save ; shape }
+    @shapes = %w(red green blue).map { |color|  shape = Shape.new(:color => color).save }
   end
 
   describe "#find" do

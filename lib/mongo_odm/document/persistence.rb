@@ -41,6 +41,7 @@ module MongoODM
           _run_save_callbacks do
             write_attribute(:_id, self.class.save(to_mongo, options))
           end
+          self
         end
 
         def save!(options = {})

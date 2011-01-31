@@ -2,6 +2,14 @@
 require "spec_helper"
 
 describe MongoODM::Document::Persistence do
+  describe "#save" do
+    it "saves a document" do
+      shape = Shape.new( :color => 'magenta' )
+      shape.save.should == shape
+      shape.id.should_not be_nil
+    end
+  end
+
   describe "#save!" do
     class TestDocument < Shape
       validates_presence_of :color
