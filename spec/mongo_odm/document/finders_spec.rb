@@ -7,6 +7,12 @@ describe MongoODM::Document::Finders do
   end
 
   describe "#find" do
+    it "returns criteria" do
+      shapes = Shape.find
+      shapes.should be_kind_of(MongoODM::Criteria)
+      shapes.should == @shapes
+    end
+
     it "finds one by id" do
       Shape.find(@shapes.first.id).should == @shapes.first
     end
@@ -21,6 +27,10 @@ describe MongoODM::Document::Finders do
   end
 
   describe "#find!" do
+    it "returns criteria" do
+      Shape.find!.should == @shapes
+    end
+
     it "finds existing document" do
       Shape.find!(@shapes.first.id).should == @shapes.first
     end

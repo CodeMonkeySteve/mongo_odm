@@ -12,7 +12,7 @@ module MongoODM
         def find( *args )
           if (args.size == 1) && (criteria = find_one_by_id(args.first))
             criteria.first
-          elsif (criteria = find_many_by_ids(args))
+          elsif criteria = find_many_by_ids(args)
             criteria
           else
             where(*args)
@@ -61,7 +61,7 @@ module MongoODM
               end
             end
           end
-          self.where( :_id => { :$in => ids } )
+          ids.present? && self.where( :_id => { :$in => ids } )
         end
       end
     end
