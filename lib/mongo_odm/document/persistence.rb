@@ -69,7 +69,7 @@ module MongoODM
           @collection ||= if self.superclass.included_modules.include?(MongoODM::Document)
                             self.superclass.collection
                           else
-                            MongoODM::Collection.new(MongoODM.database, name.tableize)
+                            MongoODM::Collection.new(name.tableize, MongoODM.database)
                           end
         end
       
@@ -78,7 +78,7 @@ module MongoODM
                         when MongoODM::Collection
                           name_or_collection
                         when String, Symbol
-                          MongoODM::Collection.new(MongoODM.database, name_or_collection)
+                          MongoODM::Collection.new(name_or_collection, MongoODM.database)
                         else
                           raise "MongoODM::Collection instance or valid collection name required"
                         end

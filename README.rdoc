@@ -102,7 +102,7 @@ By default, mongo_odm stores data on a collection with the same name than the cl
 Alternatively, you can pass a MongoODM::Collection instance to set_collection, to indicate not only a collection name, but also a different connection and/or database:
 
   class Shape
-    set_collection MongoODM::Collection.new(MongoODM.connection.db('another_database'), 'my_shapes')
+    set_collection MongoODM::Collection.new('my_shapes', MongoODM.connection.db('another_database'))
   end
 
 = Associations
