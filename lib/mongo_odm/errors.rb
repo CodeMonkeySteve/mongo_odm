@@ -13,6 +13,8 @@ module MongoODM
         super "can't localize field #{field_name}; it has to be declared as a Hash, was #{klass}"
       end
     end
+    
+    class UnknownFieldError < StandardError; end
   end
 
 end
