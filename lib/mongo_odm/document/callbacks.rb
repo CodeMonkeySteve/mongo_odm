@@ -14,6 +14,7 @@ module MongoODM
 
         define_model_callbacks :initialize, :only => :after
         define_model_callbacks :save, :destroy
+        define_model_callbacks :validate, :only => :before
       end
       
       module InstanceMethods
