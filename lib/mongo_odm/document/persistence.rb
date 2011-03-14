@@ -57,6 +57,10 @@ module MongoODM
             attrs
           end
         end
+        
+        def to_dbref
+          BSON::DBRef.new(self.class.collection.name, _id)
+        end
       end
     
       module ClassMethods
@@ -84,8 +88,31 @@ module MongoODM
                         end
         end
         
-        def find(*args)
-          MongoODM::Criteria.new(self, *args)
+        def find(selector = {}, opts = {})
+          if opts.blank? && selector.is_a?(String)
+            MongoODM::Criteria.new(self, :selector => {:_id => BSON::ObjectId.from_string(selector)})
+          elsif opts.blank? && selector.is_a?(BSON::ObjectId)
+            MongoODM::Criteria.new(self, :selector => {:_id => selector})
+          else
+            MongoODM::Criteria.new(self, :selector => selector, :opts => opts)
+          end
+        end
+        
+        def sort(key_or_list, direction = nil)
+          order = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
+          MongoODM::Criteria.new(self, :sort => order)
+        end
+        
+        def skip(number_to_skip = nil)
+          MongoODM::Criteria.new(self, :skip => number_to_skip)
+        end
+        
+        def limit(number_to_return = nil)
+          MongoODM::Criteria.new(self, :limit => number_to_return)
+        end
+        
+        def cursor
+          @cursor ||= find.to_cursor
         end
         
         def destroy_all(*args)
@@ -99,6 +126,14 @@ module MongoODM
           return nil if value.nil?
           return value if value.class == self
           new(value)
+        end
+        
+        def method_missing(method_name, *args, &block)
+          if cursor.respond_to?(method_name)
+            cursor.send(method_name, *args, &block)
+          else
+            super
+          end
         end
 
       end

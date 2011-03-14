@@ -27,6 +27,32 @@ class BSON::ObjectId
 end
 
 # @private
+class BSON::DBRef
+  def self.type_cast(value)
+    return value if value.is_a?(BSON::DBRef)
+    return value.to_dbref if value.respond_to?(:to_dbref)
+    nil
+  end
+  
+  def to_mongo
+    self
+  end
+  
+  def dereference
+    MongoODM.instanciate(MongoODM.database.dereference(self))
+  end
+  
+  def inspect
+    "BSON::DBRef(namespace:\"#{namespace}\", id: \"#{object_id}\")"
+  end
+  
+  def eql?(other)
+    to_hash == other.to_hash
+  end
+  alias :== :eql?
+end
+
+# @private
 class Array
   def self.type_cast(value)
     return nil if value.nil?
@@ -35,6 +61,10 @@ class Array
   
   def to_mongo
     self.map {|elem| elem.to_mongo}
+  end
+  
+  def dereference
+    MongoODM.instanciate(self.map{|value| MongoODM.dereference(value)})
   end
 end
 
@@ -180,7 +210,7 @@ end
 
 # Stand-in for true/false property types.
 # @private
-module Boolean
+class Boolean
   def self.type_cast(value)
     case value
     when NilClass
@@ -218,6 +248,10 @@ class Hash
   
   def to_mongo
     Hash[self.map{|k,v| [k.to_mongo, v.to_mongo]}]
+  end
+  
+  def dereference
+    Hash[self.map{|k,v| [MongoODM.instanciate(MongoODM.dereference(k)), MongoODM.instanciate(MongoODM.dereference(v))]}]
   end
 end
 

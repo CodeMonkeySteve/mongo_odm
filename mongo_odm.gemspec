@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongo_odm}
-  s.version = "0.2.5"
+  s.version = "0.2.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Carlos Paramio"]
-  s.date = %q{2011-01-20}
+  s.date = %q{2011-03-14}
   s.description = %q{mongo_odm is a flexible persistence module for any Ruby class to MongoDB.}
   s.email = %q{carlos@evolve.st}
   s.extra_rdoc_files = [
@@ -44,6 +44,7 @@ Gem::Specification.new do |s|
     "lib/mongo_odm/document/persistence.rb",
     "lib/mongo_odm/document/timestamps.rb",
     "lib/mongo_odm/document/validations.rb",
+    "lib/mongo_odm/document/validations/uniqueness_validator.rb",
     "lib/mongo_odm/errors.rb",
     "lib/mongo_odm/railtie.rb",
     "lib/mongo_odm/version.rb",
@@ -73,7 +74,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/carlosparamio/mongo_odm}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{mongo_odm is a flexible persistence module for any Ruby class to MongoDB.}
   s.test_files = [
     "spec/models/00-blank_slate.rb",
@@ -102,72 +103,71 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.3"])
-      s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.3"])
-      s.add_runtime_dependency(%q<mongo>, ["~> 1.2.0"])
-      s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.5"])
+      s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.5"])
+      s.add_runtime_dependency(%q<mongo>, ["~> 1.2.4"])
+      s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.4"])
       s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3.24"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.5"])
       s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
-      s.add_development_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.5.0"])
       s.add_development_dependency(%q<watchr>, ["~> 0.7"])
-      s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.3"])
-      s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.3"])
-      s.add_runtime_dependency(%q<mongo>, ["~> 1.2.0"])
-      s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.5"])
+      s.add_runtime_dependency(%q<activemodel>, ["~> 3.0.5"])
+      s.add_runtime_dependency(%q<mongo>, ["~> 1.2.4"])
+      s.add_runtime_dependency(%q<bson_ext>, ["~> 1.2.4"])
       s.add_runtime_dependency(%q<tzinfo>, ["~> 0.3.24"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_development_dependency(%q<yard>, ["~> 0.6.4"])
+      s.add_development_dependency(%q<yard>, ["~> 0.6.5"])
       s.add_development_dependency(%q<rcov>, ["~> 0.9.9"])
-      s.add_development_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.5.0"])
       s.add_development_dependency(%q<watchr>, ["~> 0.7"])
     else
-      s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
-      s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
-      s.add_dependency(%q<mongo>, ["~> 1.2.0"])
-      s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_dependency(%q<activesupport>, ["~> 3.0.5"])
+      s.add_dependency(%q<activemodel>, ["~> 3.0.5"])
+      s.add_dependency(%q<mongo>, ["~> 1.2.4"])
+      s.add_dependency(%q<bson_ext>, ["~> 1.2.4"])
       s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<yard>, ["~> 0.6.4"])
+      s.add_dependency(%q<yard>, ["~> 0.6.5"])
       s.add_dependency(%q<rcov>, ["~> 0.9.9"])
-      s.add_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_dependency(%q<rspec>, ["~> 2.5.0"])
       s.add_dependency(%q<watchr>, ["~> 0.7"])
-      s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
-      s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
-      s.add_dependency(%q<mongo>, ["~> 1.2.0"])
-      s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+      s.add_dependency(%q<activesupport>, ["~> 3.0.5"])
+      s.add_dependency(%q<activemodel>, ["~> 3.0.5"])
+      s.add_dependency(%q<mongo>, ["~> 1.2.4"])
+      s.add_dependency(%q<bson_ext>, ["~> 1.2.4"])
       s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<yard>, ["~> 0.6.4"])
+      s.add_dependency(%q<yard>, ["~> 0.6.5"])
       s.add_dependency(%q<rcov>, ["~> 0.9.9"])
-      s.add_dependency(%q<rspec>, ["= 2.4.0"])
+      s.add_dependency(%q<rspec>, ["~> 2.5.0"])
       s.add_dependency(%q<watchr>, ["~> 0.7"])
     end
   else
-    s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
-    s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
-    s.add_dependency(%q<mongo>, ["~> 1.2.0"])
-    s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+    s.add_dependency(%q<activesupport>, ["~> 3.0.5"])
+    s.add_dependency(%q<activemodel>, ["~> 3.0.5"])
+    s.add_dependency(%q<mongo>, ["~> 1.2.4"])
+    s.add_dependency(%q<bson_ext>, ["~> 1.2.4"])
     s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<yard>, ["~> 0.6.4"])
+    s.add_dependency(%q<yard>, ["~> 0.6.5"])
     s.add_dependency(%q<rcov>, ["~> 0.9.9"])
-    s.add_dependency(%q<rspec>, ["= 2.4.0"])
+    s.add_dependency(%q<rspec>, ["~> 2.5.0"])
     s.add_dependency(%q<watchr>, ["~> 0.7"])
-    s.add_dependency(%q<activesupport>, ["~> 3.0.3"])
-    s.add_dependency(%q<activemodel>, ["~> 3.0.3"])
-    s.add_dependency(%q<mongo>, ["~> 1.2.0"])
-    s.add_dependency(%q<bson_ext>, ["~> 1.2.0"])
+    s.add_dependency(%q<activesupport>, ["~> 3.0.5"])
+    s.add_dependency(%q<activemodel>, ["~> 3.0.5"])
+    s.add_dependency(%q<mongo>, ["~> 1.2.4"])
+    s.add_dependency(%q<bson_ext>, ["~> 1.2.4"])
     s.add_dependency(%q<tzinfo>, ["~> 0.3.24"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<yard>, ["~> 0.6.4"])
+    s.add_dependency(%q<yard>, ["~> 0.6.5"])
     s.add_dependency(%q<rcov>, ["~> 0.9.9"])
-    s.add_dependency(%q<rspec>, ["= 2.4.0"])
+    s.add_dependency(%q<rspec>, ["~> 2.5.0"])
     s.add_dependency(%q<watchr>, ["~> 0.7"])
   end
 end

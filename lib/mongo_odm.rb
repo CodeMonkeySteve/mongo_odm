@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'mongo'
 require 'active_support'
+require 'active_support/core_ext/hash'
 require 'active_model'
 
 # Contains the classes and modules related to the ODM built on top of the basic Mongo client.
@@ -45,6 +46,10 @@ module MongoODM
       return klass.constantize.new(value) if klass
     end
     value.class.type_cast(value.to_mongo)
+  end
+
+  def self.dereference(value)
+    value.respond_to?(:dereference) ? value.dereference : value
   end
 
 end
