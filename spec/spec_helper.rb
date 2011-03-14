@@ -3,10 +3,11 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
 require 'rubygems'
-require 'rspec'
+require 'bundler'
+Bundler.setup
+
 require 'mongo_odm'
 require 'database_cleaner'
-#require File.expand_path('../../config/environment', __FILE__)
 
 MongoODM.config.database = 'mongo_odm-test'
 
