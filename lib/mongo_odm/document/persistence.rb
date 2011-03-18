@@ -45,7 +45,7 @@ module MongoODM
         end
 
         def save!(options = {})
-          valid? or raise Errors::Validation.new(self)
+          valid? or raise(Errors::Validation, self)
           save(options)
         end
 

@@ -5,11 +5,11 @@ module MongoODM
       extend ActiveSupport::Concern
 
       module ClassMethods
-        def where( selector = {}, opts = {} )
+        def where(selector = {}, opts = {})
           MongoODM::Criteria.new(self, :selector => selector, :opts => opts)
         end
 
-        def find( *args )
+        def find(*args)
           if (args.size == 1) && (criteria = find_one_by_id(args.first))
             criteria.first
           elsif (args.size >= 2) && (criteria = find_many_by_ids(args))
@@ -19,21 +19,21 @@ module MongoODM
           end
         end
 
-        def find!( *ids )
-          documents = Array( find(*ids) )
+        def find!(*ids)
+          documents = Array(find(*ids))
           found = documents.map(&:id)
           missing = ids.reject { |id|  found.include?(id) }
           missing.empty?  or raise Errors::DocumentNotFound.new(self.class, missing)
           (documents.count == 1) ? documents.first : documents
         end
 
-        def find_or_initialize_by( attr )
+        def find_or_initialize_by(attr)
           self.find(attr).first || self.new(attr)
         end
 
-        def find_or_create_by( attr )
+        def find_or_create_by(attr)
           doc = find_or_initialize_by(attr)
-          doc.save  if doc.new_record?
+          doc.save if doc.new_record?
           doc
         end
 
@@ -63,8 +63,8 @@ module MongoODM
         end
 
       protected
-        def find_one_by_id( id )
-          return nil  if id.kind_of?(Hash)
+        def find_one_by_id(id)
+          return nil if id.kind_of?(Hash)
           unless id.kind_of? BSON::ObjectId
             begin
               id = BSON::ObjectId.from_string(id.to_s)
@@ -72,11 +72,11 @@ module MongoODM
               return nil
             end
           end
-          self.where( :_id => id )
+          self.where(:_id => id)
         end
 
-        def find_many_by_ids( ids )
-          return nil  if ids.any? { |id|  id.kind_of?(Hash) }
+        def find_many_by_ids(ids)
+          return nil if ids.any? { |id|  id.kind_of?(Hash) }
           ids = ids.map  do |id|
             if id.kind_of?(BSON::ObjectId)
               id
@@ -88,7 +88,7 @@ module MongoODM
               end
             end
           end.compact
-          ids.present? && self.where( :_id => { :$in => ids } )
+          ids.present? && self.where(:_id => { :$in => ids })
         end
       end
     end

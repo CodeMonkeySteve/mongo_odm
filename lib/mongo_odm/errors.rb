@@ -30,7 +30,7 @@ module MongoODM
 
     class Validation < Error
       attr_reader :document
-      def initialize( doc )
+      def initialize(doc)
         @document = doc
       end
     end

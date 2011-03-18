@@ -18,11 +18,11 @@ describe MongoODM::Document::Finders do
     end
 
     it "finds multiple by ids" do
-      Shape.find( *@shapes.map(&:id) ).should == @shapes
+      Shape.find(*@shapes.map(&:id)).should == @shapes
     end
 
     it "finds by criteria" do
-      Shape.find( :color => @shapes.last.color ).should == [@shapes.last]
+      Shape.find(:color => @shapes.last.color).should == [@shapes.last]
     end
   end
 
@@ -37,19 +37,19 @@ describe MongoODM::Document::Finders do
 
     it "errors when document missing" do
       lambda {
-        Shape.find!( BSON::ObjectId.new )
-      }.should raise_error( MongoODM::Errors::DocumentNotFound )
+        Shape.find!(BSON::ObjectId.new)
+      }.should raise_error(MongoODM::Errors::DocumentNotFound)
     end
   end
 
   describe "#find_or_initialize_by" do
     it "finds existing document" do
-      Shape.find_or_initialize_by( :color => @shapes.last.color ).should == @shapes.last
+      Shape.find_or_initialize_by(:color => @shapes.last.color).should == @shapes.last
     end
 
     it "initializes new document" do
       color = 'purple'
-      shape = Shape.find_or_initialize_by( :color => color )
+      shape = Shape.find_or_initialize_by(:color => color)
       shape.color.should == color
       shape.should be_new_record
     end
@@ -57,12 +57,12 @@ describe MongoODM::Document::Finders do
 
   describe "#find_or_create_by" do
     it "finds existing document" do
-      Shape.find_or_create_by( :color => @shapes.last.color ).should == @shapes.last
+      Shape.find_or_create_by(:color => @shapes.last.color).should == @shapes.last
     end
 
     it "creates new document" do
       color = 'purple'
-      shape = Shape.find_or_create_by( :color => color )
+      shape = Shape.find_or_create_by(:color => color)
       shape.color.should == color
       shape.should_not be_new_record
     end

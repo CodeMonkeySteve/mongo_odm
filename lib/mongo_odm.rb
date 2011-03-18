@@ -27,7 +27,7 @@ module MongoODM
   end
 
   def self.database
-    Thread.current[:mongo_odm_database] ||= self.connection.db( config.database )
+    Thread.current[:mongo_odm_database] ||= self.connection.db(config.database)
   end
 
   def self.config

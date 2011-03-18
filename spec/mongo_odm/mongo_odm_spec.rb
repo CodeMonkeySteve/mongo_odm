@@ -7,7 +7,7 @@ describe MongoODM do
     context "when connection does not exist" do
 
       before do
-        conn = Mongo::Connection.new( nil, nil, :connect => false )
+        conn = Mongo::Connection.new(nil, nil, :connect => false)
         Mongo::Connection.stub(:new).and_return(conn)
         MongoODM.connection = nil
       end
@@ -20,7 +20,7 @@ describe MongoODM do
 
     context "when connection already exists" do
       before do
-        conn = Mongo::Connection.new( nil, nil, :connect => false )
+        conn = Mongo::Connection.new(nil, nil, :connect => false)
         Mongo::Connection.stub(:new).and_return(conn)
         @connection = MongoODM.connection
       end
@@ -28,14 +28,14 @@ describe MongoODM do
       it "returns the current Mongo::Connection instance" do
         MongoODM.connection.should == @connection
       end
-      
+
       it "returns a different Mongo::Connection instance per thread" do
         thread = Thread.new { @connection.should_not == MongoODM.connection }
         thread.join
       end
-      
+
       it "returns a different Mongo::Connection when configuration changes" do
-        MongoODM.config = {:port => 9000}
+        MongoODM.config = {:port => 9000 }
         MongoODM.connection.should_not == @connection
       end
 
