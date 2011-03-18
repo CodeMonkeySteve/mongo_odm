@@ -67,10 +67,6 @@ module MongoODM
             attrs
           end
         end
-
-        def to_dbref
-          BSON::DBRef.new(self.class.collection.name, _id)
-        end
       end
 
       module ClassMethods
