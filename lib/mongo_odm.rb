@@ -40,12 +40,13 @@ module MongoODM
   end
 
   def self.instanciate(value)
-    return value if value.is_a?(MongoODM::Document)
-    if value.is_a?(Hash)
-      klass = value["_class"] || value[:_class]
-      return klass.constantize.new(value) if klass
+    if value.is_a?(MongoODM::Document)
+      value
+    elsif value.is_a?(Hash) && (klass = value["_class"] || value[:_class])
+      klass.constantize.new(value)
+    else
+      value.class.type_cast(value.to_mongo)
     end
-    value.class.type_cast(value.to_mongo)
   end
 
   def self.dereference(value)
