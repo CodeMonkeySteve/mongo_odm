@@ -47,7 +47,7 @@ module MongoODM
 
         def save!(options = {})
           valid? or raise(Errors::Validation, self)
-          save(options)
+          save(options.merge(:validate => false))
         end
 
         def update_attributes(attributes)
