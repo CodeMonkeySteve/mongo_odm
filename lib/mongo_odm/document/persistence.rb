@@ -27,6 +27,7 @@ module MongoODM
 
         def reload
           self.load_attributes_or_defaults(self.class.find_one(:_id => id).attributes) unless new_record?
+          self
         end
 
         # Save a document to its collection.
