@@ -20,7 +20,7 @@ class BSON::ObjectId
     return value if value.is_a?(BSON::ObjectId)
     BSON::ObjectId(value)
   end
-  
+
   def to_mongo
     self
   end
@@ -33,19 +33,19 @@ class BSON::DBRef
     return value.to_dbref if value.respond_to?(:to_dbref)
     nil
   end
-  
+
   def to_mongo
     self
   end
-  
+
   def dereference
     MongoODM.instanciate(MongoODM.database.dereference(self))
   end
-  
+
   def inspect
     "BSON::DBRef(namespace:\"#{namespace}\", id: \"#{object_id}\")"
   end
-  
+
   def eql?(other)
     to_hash == other.to_hash
   end
@@ -58,11 +58,11 @@ class Array
     return nil if value.nil?
     value.to_a.map {|elem| MongoODM.instanciate(elem)}
   end
-  
+
   def to_mongo
     self.map {|elem| elem.to_mongo}
   end
-  
+
   def dereference
     MongoODM.instanciate(self.map{|value| MongoODM.dereference(value)})
   end
@@ -74,7 +74,7 @@ class Class
     return nil if value.nil?
     value.to_s.constantize
   end
-  
+
   def to_mongo
     self.name
   end
@@ -90,7 +90,7 @@ class Symbol
       else value.inspect.intern
     end
   end
-  
+
   def to_mongo
     self
   end
@@ -102,7 +102,7 @@ class Integer
     return nil if value.nil?
     value.to_i
   end
-  
+
   def to_mongo
     self
   end
@@ -114,7 +114,7 @@ class Float
     return nil if value.nil?
     value.to_f
   end
-  
+
   def to_mongo
     self
   end
@@ -126,7 +126,7 @@ class BigDecimal
     return nil if value.nil?
     value.is_a?(BigDecimal) ? value : new(value.to_s)
   end
-  
+
   def to_mongo
     self.to_s
   end
@@ -141,7 +141,7 @@ class String
       else value.inspect
     end
   end
-  
+
   def to_mongo
     self
   end
@@ -153,7 +153,7 @@ class Date
     return nil if value.nil?
     value.to_date
   end
-  
+
   def to_mongo
     Time.utc(self.year, self.month, self.day)
   end
@@ -165,7 +165,7 @@ class DateTime
     return nil if value.nil?
     value.to_datetime
   end
-  
+
   def to_mongo
     datetime = self.utc
     Time.utc(datetime.year, datetime.month, datetime.day, datetime.hour, datetime.min, datetime.sec)
@@ -190,7 +190,7 @@ class FalseClass
     return nil if value.nil?
     false
   end
-  
+
   def to_mongo
     self
   end
@@ -200,11 +200,14 @@ end
 class Time
   def self.type_cast(value)
     return nil if value.nil?
-    value.to_time
+
+    # BSON rounds times to milliseconds
+    # (note: bson_ext rounds, bson truncates)
+    ::Time.at(value.to_time.to_f.round(3))
   end
-  
+
   def to_mongo
-    self.utc
+    self.dup.utc
   end
 end
 
@@ -245,11 +248,11 @@ class Hash
     return nil if value.nil?
     Hash[value.to_hash.map{|k,v| [MongoODM.instanciate(k), MongoODM.instanciate(v)]}]
   end
-  
+
   def to_mongo
     Hash[self.map{|k,v| [k.to_mongo, v.to_mongo]}]
   end
-  
+
   def dereference
     Hash[self.map{|k,v| [MongoODM.instanciate(MongoODM.dereference(k)), MongoODM.instanciate(MongoODM.dereference(v))]}]
   end
@@ -260,7 +263,7 @@ class HashWithIndifferentAccess
   def self.type_cast(value)
     Hash.type_cast(value).with_indifferent_access
   end
-  
+
   def to_mongo
     Hash[self.map{|k,v| [k.to_mongo, v.to_mongo]}]
   end
@@ -272,7 +275,7 @@ class Regexp
     return nil if value.nil?
     new(value)
   end
-  
+
   def to_mongo
     self
   end
@@ -283,7 +286,7 @@ class NilClass
   def self.type_cast(value)
     nil
   end
-  
+
   def to_mongo
     nil
   end
