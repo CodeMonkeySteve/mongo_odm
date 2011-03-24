@@ -50,12 +50,17 @@ module MongoODM
           MongoODM::Criteria.new(self, :limit => number_to_return)
         end
 
-        def cursor
-          @cursor ||= find.to_cursor
+        def to_cursor
+          if @cursor
+            @cursor.rewind!
+          else
+            @cursor = where.to_cursor
+          end
+          @cursor
         end
 
         def method_missing(method_name, *args, &block)
-          if cursor.respond_to?(method_name)
+          if (cursor = to_cursor).respond_to?(method_name)
             cursor.send(method_name, *args, &block)
           else
             super
