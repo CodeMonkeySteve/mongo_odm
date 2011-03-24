@@ -12,7 +12,7 @@ module MongoODM
       @sort     = options[:sort]     || []
       @limit    = options[:limit]    || nil
       @skip     = options[:skip]     || nil
-      _set_cursor
+      reload
     end
 
     def ==(other)
@@ -29,15 +29,20 @@ module MongoODM
     end
 
     def to_cursor
+      if @cursor
+        @cursor.rewind!
+      else
+        @cursor = @klass.collection.find(@selector, @opts)
+        @cursor = @cursor.sort(@sort)   unless @sort.blank?
+        @cursor = @cursor.limit(@limit) unless @limit.blank?
+        @cursor = @cursor.skip(@skip)   unless @skip.blank?
+      end
       @cursor
     end
 
-    def _set_cursor
-      @cursor = @klass.collection.find(@selector, @opts)
-      @cursor = @cursor.sort(@sort)   unless @sort.blank?
-      @cursor = @cursor.limit(@limit) unless @limit.blank?
-      @cursor = @cursor.skip(@skip)   unless @skip.blank?
-      @cursor
+    def reload
+      @cursor = nil
+      self
     end
 
     def _merge_criteria(criteria)
@@ -46,16 +51,15 @@ module MongoODM
       @sort  << criteria.instance_variable_get(:@sort) unless criteria.instance_variable_get(:@sort).blank?
       @limit = criteria.instance_variable_get(:@limit) unless criteria.instance_variable_get(:@limit).blank?
       @skip  = criteria.instance_variable_get(:@skip)  unless criteria.instance_variable_get(:@skip).blank?
-      _set_cursor
-      self
+      reload
     end
 
     def method_missing(method_name, *args, &block)
       if @klass.respond_to?(method_name)
         result = @klass.send(method_name, *args, &block)
         result.is_a?(Criteria) ? _merge_criteria(result) : result
-      elsif @cursor.respond_to?(method_name)
-        @cursor.send(method_name, *args, &block)
+      elsif (cursor = to_cursor).respond_to?(method_name)
+        cursor.send(method_name, *args, &block)
       elsif [].respond_to?(method_name)
         to_a.send(method_name, *args, &block)
       else
