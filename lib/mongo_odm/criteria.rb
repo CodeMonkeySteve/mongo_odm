@@ -3,7 +3,7 @@ module MongoODM
 
   class Criteria
     delegate :to_a, :count, :collect, :map, :each, :all?, :include?, :to => :to_cursor
-    delegate :inspect, :to_xml, :to_yaml, :to_json, :include?, :length, :to => :to_a
+    delegate :to_xml, :to_yaml, :to_json, :include?, :length, :to => :to_a
 
     def initialize(klass, options = {})
       @klass    = klass
