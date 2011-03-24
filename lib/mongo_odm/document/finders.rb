@@ -39,15 +39,15 @@ module MongoODM
 
         def sort(key_or_list, direction = nil)
           order = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
-          where(:sort => order)
+          MongoODM::Criteria.new(self, :sort => order)
         end
 
         def skip(number_to_skip = nil)
-          where(:skip => number_to_skip)
+          MongoODM::Criteria.new(self, :skip => number_to_skip)
         end
 
         def limit(number_to_return = nil)
-          where(:limit => number_to_return)
+          MongoODM::Criteria.new(self, :limit => number_to_return)
         end
 
         def cursor
