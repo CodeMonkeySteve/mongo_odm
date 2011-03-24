@@ -29,9 +29,8 @@ module MongoODM
     end
 
     class Validation < Error
-      attr_reader :document
       def initialize(doc)
-        @document = doc
+        super "validation failure: #{doc.errors.full_messages}"
       end
     end
   end
