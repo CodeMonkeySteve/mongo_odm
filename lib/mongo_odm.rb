@@ -54,3 +54,8 @@ module MongoODM
   end
 
 end
+
+if defined?(Rails)
+  require 'mongo_odm/railtie'
+end
+
