@@ -7,7 +7,7 @@ module MongoODM
 
     def initialize(klass, options = {})
       @klass    = klass
-      @selector = options[:selector] || {}
+      @selector = options[:selector].to_mongo || {}
       @opts     = options[:opts]     || {}
       @sort     = options[:sort]     || []
       @limit    = options[:limit]    || nil
