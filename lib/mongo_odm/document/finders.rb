@@ -20,10 +20,11 @@ module MongoODM
         end
 
         def find!(*ids)
+          ids.map! { |id| id.is_a?(BSON::ObjectId) ? id : BSON::ObjectId(id) }
           documents = Array(find(*ids))
           found = documents.map(&:id)
           missing = ids.reject { |id|  found.include?(id) }
-          missing.empty?  or raise Errors::DocumentNotFound.new(self.class, missing)
+          missing.empty? or raise Errors::DocumentNotFound.new(missing, self.class)
           (documents.count == 1) ? documents.first : documents
         end
 
