@@ -33,7 +33,7 @@ module MongoODM
 
     delegate :!=, :!~, :<=>, :===, :=~, :eql?, :to => :target
     #delegate :inspect, :to_s, :instance_eval, :hash, :is_a?, :kind_of?, :respond_to?, :__send__, :to => :target
-    delegate :send, :to => :target
+    delegate :send, :as_json, :to => :target
     def method_missing(method, *args)
       target.send(method, *args)
     end
