@@ -224,7 +224,7 @@ class Boolean
       value
     when /^\s*t/i
       true
-    when /^\s*f/i
+    when /^\s*f/i, "0"
       false
     else
       value.present?
@@ -289,5 +289,21 @@ class NilClass
 
   def to_mongo
     nil
+  end
+end
+
+# @private
+class Set
+  def self.type_cast(value)
+    return nil if value.nil?
+    Set.new(Array.type_cast(value))
+  end
+  
+  def to_mongo
+    self.map {|elem| elem.to_mongo}
+  end
+  
+  def dereference
+    MongoODM.instanciate(self.map{|value| MongoODM.dereference(value)})
   end
 end

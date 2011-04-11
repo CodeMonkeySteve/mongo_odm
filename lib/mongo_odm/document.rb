@@ -11,6 +11,7 @@ module MongoODM
     autoload :Callbacks
     autoload :Fields
     autoload :Finders
+    autoload :Indexes
     autoload :Inspect
     autoload :Persistence
     autoload :Referable
@@ -30,6 +31,7 @@ module MongoODM
       include Document::Persistence
       include Document::AttributeMethods
       include Document::Fields
+      include Document::Indexes
       include Document::Inspect
       include Document::Callbacks
       include Document::Referable
