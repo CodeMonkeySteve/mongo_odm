@@ -34,11 +34,11 @@ module MongoODM
     def to_a
       @_result ||= @_cursor.rewind! && @_cursor.to_a
     end
-    
+
     def to_cursor
       @_cursor
     end
-    
+
     def _set_cursor
       @_cursor ||= @_klass.collection.find(@_selector, @_opts.dup)
     end
