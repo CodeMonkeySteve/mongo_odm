@@ -24,7 +24,7 @@ module MongoODM
           end
           
           def [](attr_name)
-            read_attribute[attr_name]
+            read_attribute(attr_name)
           end
 
           def attribute(attr_name)
