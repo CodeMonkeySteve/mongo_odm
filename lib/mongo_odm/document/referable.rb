@@ -16,7 +16,7 @@ module MongoODM
             (model.fields.include?(f = n.singularize.to_sym) && f) ||
             (model.fields.include?(f = n.pluralize.to_sym) && f)
           raise "Missing field" unless field_name
-          raise(UnknownFieldError, field_name, model) unless model.fields.include?(field_name)
+          raise(UnknownFieldError.new(field_name, model)) unless model.fields.include?(field_name)
 
           method_name = opts[:as] || model.to_s.underscore.pluralize
           raise "Field \"#{method_name}\" already defined in #{self.name}" if method_defined?(method_name.to_sym)

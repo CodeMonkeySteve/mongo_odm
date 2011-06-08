@@ -44,7 +44,7 @@ module MongoODM
             if respond_to?(:"#{name}=")
               send(:"#{name}=", value)
             else
-              auto_generate_attributes ? write_attribute(name, value) : raise(MongoODM::Errors::UnknownFieldError, name, self.class)
+              auto_generate_attributes ? write_attribute(name, value) : raise(MongoODM::Errors::UnknownFieldError.new(name, self.class))
             end
           end
         end
