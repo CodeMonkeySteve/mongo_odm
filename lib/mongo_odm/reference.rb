@@ -15,6 +15,10 @@ module MongoODM
       end
     end
 
+    def id
+      @target ? @target.id : @ref.object_id
+    end
+
     def target
       @target ||= @ref.dereference
     end
