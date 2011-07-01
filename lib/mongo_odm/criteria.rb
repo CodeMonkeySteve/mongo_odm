@@ -4,7 +4,8 @@ require 'mongo_odm/core_ext/hash_recursive_merge'
 module MongoODM
 
   class Criteria
-    delegate :to_xml, :to_yaml, :to_json, :include?, :first, :length, :count, :collect, :map, :each, :all?, :include?, :to => :to_a
+    delegate :to_xml, :to_yaml, :to_json, :include?, :first, :length, :collect, :map, :each, :all?, :include?, :to => :to_a
+    delegate :count, :to => :to_cursor
 
     def initialize(klass, selector = {}, opts = {})
       @_klass    = klass
