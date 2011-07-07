@@ -15,10 +15,13 @@ describe MongoODM::Document::Finders do
 
     it "finds one by id" do
       Shape.find(@shapes.first.id).should == @shapes.first
+      Shape.find([@shapes.first.id]).should == [@shapes.first]
     end
 
     it "finds multiple by ids" do
+      Shape.find([]).should == []
       Shape.find(*@shapes.map(&:id)).should == @shapes
+      Shape.find(@shapes.map(&:id)).should == @shapes
     end
 
     it "finds by criteria" do

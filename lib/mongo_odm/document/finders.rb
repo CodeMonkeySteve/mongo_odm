@@ -12,6 +12,8 @@ module MongoODM
         def find(*args)
           if (args.size == 1) && (criteria = find_one_by_id(args.first))
             criteria.first
+          elsif (args.size == 1) && args[0].is_a?(Array) && (criteria = find_many_by_ids(args[0]))
+            criteria
           elsif (args.size >= 2) && (criteria = find_many_by_ids(args))
             criteria
           else
@@ -94,7 +96,7 @@ module MongoODM
               end
             end
           end.compact
-          ids.present? && self.where(:_id => { :$in => ids })
+          self.where(:_id => { :$in => ids })
         end
       end
     end
