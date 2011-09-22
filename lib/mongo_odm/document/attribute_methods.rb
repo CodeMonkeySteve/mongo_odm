@@ -69,8 +69,7 @@ module MongoODM
         def method_missing(method_id, *args, &block)
           # If we haven't generated any methods yet, generate them, then
           # see if we've created the method we're looking for.
-          method = self.class.respond_to?(:attribute_methods_generated?) ? :attribute_methods_generated? : :generated_attribute_methods
-          if !self.class.send(method)
+          unless self.class.attribute_methods_generated?
             self.class.define_attribute_methods_for_fields
             method_name = method_id.to_s
             guard_private_attribute_method!(method_name, args)
@@ -81,7 +80,7 @@ module MongoODM
         end
         
         def respond_to?(*args)
-          self.class.define_attribute_methods_for_fields
+          self.class.define_attribute_methods_for_fields unless self.class.attribute_methods_generated?
           super
         end
         
@@ -92,12 +91,17 @@ module MongoODM
       end
     
       module ClassMethods
+        def attribute_methods_generated?
+          @attribute_methods_generated ||= nil
+        end
+
         def default_attributes
           HashWithIndifferentAccess[fields.values.map{|field| [field.name, field.default.respond_to?(:call) ? field.default.call : field.default]}]
         end
         
         def define_attribute_methods_for_fields
           define_attribute_methods(fields.keys + [:_id, :_class])
+          @attribute_methods_generated = true
         end
       end
     
