@@ -47,7 +47,7 @@ class BSON::DBRef
   end
 
   def eql?(other)
-    to_hash == other.to_hash
+    other.respond_to?(:to_hash) && (self.to_hash == other.to_hash)
   end
   alias :== :eql?
 end

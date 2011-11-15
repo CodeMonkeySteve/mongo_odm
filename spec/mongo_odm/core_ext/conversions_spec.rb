@@ -6,6 +6,18 @@ describe "Conversions" do
   before do
     Time.zone = 'UTC'
   end
+
+  describe BSON::DBRef do
+
+    describe "==" do
+
+      it "compares with nil" do
+        BSON::DBRef.new('collection', BSON::ObjectId.new).should_not == nil
+      end
+
+    end
+
+  end
   
   describe Array do
 
