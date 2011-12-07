@@ -8,8 +8,8 @@ gem 'bson_ext'
 gem 'tzinfo'
 
 group :development do
-  gem 'autotest'
   gem 'database_cleaner'
+  gem 'guard-rspec'
   gem 'jeweler'
   gem 'rcov'
   gem 'rspec'
