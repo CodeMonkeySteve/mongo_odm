@@ -33,6 +33,7 @@ module MongoODM
         Reference = MongoODM::Reference
 
         def to_dbref
+          raise Errors::ReferenceNewRecord if new_record?
           BSON::DBRef.new(self.class.collection.name, _id)
         end
 

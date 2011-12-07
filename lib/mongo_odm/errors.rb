@@ -16,13 +16,13 @@ module MongoODM
       end
     end
 
-    class UnknownFieldError < StandardError
+    class UnknownFieldError < Error
       def initialize(field_name, klass)
         super "unknown field #{field_name} on class #{klass.name}"
       end
     end
 
-    class DocumentNotFound < StandardError
+    class DocumentNotFound < Error
       def initialize(ids, klass)
         super "can't find document for class #{klass} with id(s) #{ids}"
       end
@@ -33,6 +33,11 @@ module MongoODM
         super "validation failure: #{doc.errors.full_messages}"
       end
     end
-  end
 
+    class ReferenceNewRecord < Error
+      def initialize
+        super "can't reference new record"
+      end
+    end
+  end
 end
