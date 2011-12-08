@@ -5,9 +5,12 @@ module MongoODM
       extend ActiveSupport::Concern
 
       module ClassMethods
+        delegate :sort, :skip, :limit, :to => :where
+
         def where(selector = {}, opts = {})
           MongoODM::Criteria.new(self, selector, opts)
         end
+        alias all where
 
         def find(*args)
           if (args.size == 1) && (criteria = find_one_by_id(args.first))
@@ -38,19 +41,6 @@ module MongoODM
           doc = find_or_initialize_by(attr)
           doc.save if doc.new_record?
           doc
-        end
-
-        def sort(key_or_list, direction = nil)
-          order = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
-          MongoODM::Criteria.new(self, {}, :sort => order)
-        end
-
-        def skip(number_to_skip = nil)
-          MongoODM::Criteria.new(self, {}, :skip => number_to_skip)
-        end
-
-        def limit(number_to_return = nil)
-          MongoODM::Criteria.new(self, {}, :limit => number_to_return)
         end
 
         def to_cursor

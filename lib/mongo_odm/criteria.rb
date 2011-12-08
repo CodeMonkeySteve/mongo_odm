@@ -26,6 +26,21 @@ module MongoODM
       end
     end
 
+    def sort(key_or_list, direction = nil)
+      @_opts[:sort] = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
+      self
+    end
+
+    def skip(number_to_skip = nil)
+      @_opts[:skip] = number_to_skip
+      self
+    end
+
+    def limit(number_to_return = nil)
+      @_opts[:limit] = number_to_return
+      self
+    end
+
     def reload
       @_cursor = nil
       _set_cursor
