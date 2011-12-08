@@ -9,7 +9,6 @@ describe MongoODM::Criteria do
   it "#first" do
     criteria = Shape.where(:color => 'red')
     criteria.should be_a(MongoODM::Criteria)
-p criteria.first
     criteria.first.should == @shapes.first
   end
 

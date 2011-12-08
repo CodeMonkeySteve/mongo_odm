@@ -4,7 +4,7 @@ require 'mongo_odm/core_ext/hash_recursive_merge'
 module MongoODM
 
   class Criteria
-    delegate :to_xml, :to_yaml, :to_json, :include?, :first, :length, :collect, :map, :all?, :include?, :to => :to_a
+    delegate :to_xml, :to_yaml, :to_json, :include?, :length, :collect, :map, :all?, :include?, :to => :to_a
     delegate :count, :each, :to => :to_cursor
 
     def initialize(klass, selector = {}, opts = {})
@@ -32,6 +32,10 @@ module MongoODM
       self
     end
 
+    def first
+      @_klass.collection.find_one(@_selector, @_opts)
+    end
+
     def to_a
       @_result ||= @_cursor.rewind! && @_cursor.to_a
     end
@@ -41,7 +45,7 @@ module MongoODM
     end
 
     def _set_cursor
-      @_cursor ||= @_klass.collection.find(@_selector, @_opts.dup)
+      @_cursor ||= @_klass.collection.find(@_selector, @_opts)
     end
 
     def _merge_criteria(criteria)
