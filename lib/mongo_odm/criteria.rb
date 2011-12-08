@@ -5,13 +5,12 @@ module MongoODM
 
   class Criteria
     delegate :to_xml, :to_yaml, :to_json, :include?, :length, :collect, :map, :all?, :include?, :to => :to_a
-    delegate :count, :each, :to => :to_cursor
+    delegate :count, :each, :to => :cursor
 
     def initialize(klass, selector = {}, opts = {})
       @_klass    = klass
       @_selector = selector.to_mongo
       @_opts     = opts
-      _set_cursor
     end
     attr_reader :_klass, :_selector, :_opts
 
@@ -28,22 +27,21 @@ module MongoODM
 
     def sort(key_or_list, direction = nil)
       @_opts[:sort] = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
-      self
+      reload
     end
 
     def skip(number_to_skip = nil)
       @_opts[:skip] = number_to_skip
-      self
+      reload
     end
 
     def limit(number_to_return = nil)
       @_opts[:limit] = number_to_return
-      self
+      reload
     end
 
     def reload
       @_cursor = nil
-      _set_cursor
       self
     end
 
@@ -52,14 +50,10 @@ module MongoODM
     end
 
     def to_a
-      @_result ||= @_cursor.rewind! && @_cursor.to_a
+      @_result ||= cursor.rewind! && cursor.to_a
     end
 
-    def to_cursor
-      @_cursor
-    end
-
-    def _set_cursor
+    def cursor
       @_cursor ||= @_klass.collection.find(@_selector, @_opts)
     end
 
@@ -74,8 +68,8 @@ module MongoODM
       if @_klass.respond_to?(method_name)
         result = @_klass.send(method_name, *args, &block)
         result.is_a?(Criteria) ? _merge_criteria(result) : result
-      elsif @_cursor.respond_to?(method_name)
-        @_cursor.send(method_name, *args, &block)
+      elsif cursor.respond_to?(method_name)
+        cursor.send(method_name, *args, &block)
       elsif [].respond_to?(method_name)
         to_a.send(method_name, *args, &block)
       else

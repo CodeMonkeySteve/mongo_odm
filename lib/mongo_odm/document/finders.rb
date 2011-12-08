@@ -43,18 +43,9 @@ module MongoODM
           doc
         end
 
-        def to_cursor
-          if @cursor
-            @cursor.rewind!
-          else
-            @cursor = where.to_cursor
-          end
-          @cursor
-        end
-
         def method_missing(method_name, *args, &block)
-          if (cursor = to_cursor).respond_to?(method_name)
-            cursor.send(method_name, *args, &block)
+          if (criteria = self.where).respond_to?(method_name)
+            criteria.send(method_name, *args, &block)
           else
             super
           end
