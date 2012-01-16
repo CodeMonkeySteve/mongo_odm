@@ -6,6 +6,7 @@ module MongoODM
       doc = super
       MongoODM.instanciate(doc)
     end
+    alias next next_document
   end
 
 end

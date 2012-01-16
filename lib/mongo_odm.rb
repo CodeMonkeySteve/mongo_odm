@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'mongo'
 require 'active_support'
+require 'active_support/core_ext/hash'
 require 'active_model'
 
 # Contains the classes and modules related to the ODM built on top of the basic Mongo client.
@@ -26,7 +27,7 @@ module MongoODM
   end
 
   def self.database
-    Thread.current[:mongo_odm_database] ||= self.connection.db( config.database )
+    Thread.current[:mongo_odm_database] ||= self.connection.db(config.database)
   end
 
   def self.config
@@ -39,12 +40,34 @@ module MongoODM
   end
 
   def self.instanciate(value)
-    return value if value.is_a?(MongoODM::Document)
-    if value.is_a?(Hash)
-      klass = value["_class"] || value[:_class]
-      return klass.constantize.new(value) if klass
+    if value.is_a?(MongoODM::Document) || value.is_a?(MongoODM::Reference)
+      value
+    elsif value.is_a?(Hash) && (klass = value["_class"] || value[:_class])
+      klass.constantize.new(value)
+    else
+      value.class.type_cast(value.to_mongo)
     end
-    value.class.type_cast(value.to_mongo)
+  end
+
+  def self.dereference(value)
+    value.respond_to?(:dereference) ? value.dereference : value
+  end
+  
+  def self.indexed_classes
+    @_indexes ||= Set.new
+  end
+  
+  def self.create_indexes
+    indexed_classes.each {|klass| klass.create_indexes}
+  end
+  
+  def self.add_index_class(klass)
+    indexed_classes << klass
   end
 
 end
+
+if defined?(Rails)
+  require 'mongo_odm/railtie'
+end
+

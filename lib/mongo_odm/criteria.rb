@@ -1,63 +1,82 @@
 # encoding: utf-8
+require 'mongo_odm/core_ext/hash_recursive_merge'
+
 module MongoODM
 
   class Criteria
-    delegate :to_a, :count, :collect, :map, :each, :all?, :include?, :to => :cursor
-    delegate :inspect, :to_xml, :to_yaml, :length, :to => :to_a
+    delegate :to_xml, :to_yaml, :to_json, :include?, :length, :collect, :map, :all?, :include?, :to => :to_a
+    delegate :count, :each, :to => :cursor
 
     def initialize(klass, selector = {}, opts = {})
-      @klass, @selector, @opts = klass, selector, opts
-      @cursor = nil
+      @_klass    = klass
+      @_selector = selector.to_mongo
+      @_opts     = opts
     end
-
-    def find(selector = {}, opts = {})
-      _merge_criteria(selector, opts)
-      @cursor = nil
-    end
-
-    def loaded?
-      @cursor
-    end
+    attr_reader :_klass, :_selector, :_opts
 
     def ==(other)
       case other
       when Criteria
-        other.instance_variable_get("@selector") == @selector &&
-        other.instance_variable_get("@opts")     == @opts
-      when Array
+        other._klass    == @_klass &&
+        other._selector == @_selector &&
+        other._opts     == @_opts
+      else
         to_a == other.to_a
       end
     end
 
-    def method_missing(method_name, *args, &block)
-      if Array.method_defined?(method_name)
-        to_a.send(method_name, *args, &block)
-      elsif @klass.methods.include?(method_name)
-        result = @klass.send(method_name, *args, &block)
-        if result.is_a?(Criteria)
-          selector = result.instance_variable_get("@selector")
-          opts = result.instance_variable_get("@opts")
-          _merge_criteria(selector, opts)
-        else
-          result
-        end
-      else
-        cursor.send(method_name, *args)
-      end
+    def sort(key_or_list, direction = nil)
+      @_opts[:sort] = key_or_list.is_a?(Array) ? key_or_list : direction.nil? ? [key_or_list, :asc] : [key_or_list, direction]
+      reload
     end
 
-    def _merge_criteria(selector, opts)
-      @selector.merge!(selector)
-      @opts.merge!(opts)
-      @cursor = nil
+    def skip(number_to_skip = nil)
+      @_opts[:skip] = number_to_skip
+      reload
+    end
+
+    def limit(number_to_return = nil)
+      @_opts[:limit] = number_to_return
+      reload
+    end
+
+    def reload
+      @_cursor = nil
       self
     end
 
-  protected
+    def first
+      @_klass.collection.find_one(@_selector, @_opts)
+    end
+
+    def to_a
+      @_result ||= cursor.rewind! && cursor.to_a
+    end
 
     def cursor
-      @cursor ||= @klass.collection.find(@selector, @opts)
+      @_cursor ||= @_klass.collection.find(@_selector, @_opts)
     end
+
+    def _merge_criteria(criteria)
+      @_selector.rmerge!(criteria._selector.to_mongo)
+      @_opts.rmerge!(criteria._opts)
+      reload
+      self
+    end
+
+    def method_missing(method_name, *args, &block)
+      if @_klass.respond_to?(method_name)
+        result = @_klass.send(method_name, *args, &block)
+        result.is_a?(Criteria) ? _merge_criteria(result) : result
+      elsif cursor.respond_to?(method_name)
+        cursor.send(method_name, *args, &block)
+      elsif [].respond_to?(method_name)
+        to_a.send(method_name, *args, &block)
+      else
+        super
+      end
+    end
+
   end
 
 end

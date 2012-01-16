@@ -12,7 +12,7 @@ module MongoODM
       @database ||= 'test'
       @host ||= 'localhost'
       @port || 27017
-      @logger ||= Rails.logger  if defined?(Rails)
+      @logger ||= Rails.logger if defined?(Rails)
       @pool_size ||= 1
     end
 
@@ -22,7 +22,7 @@ module MongoODM
       @host, @port, @username, @password = uri.host, uri.port, uri.user, uri.password
     end
 
-    def from_hash( opts )
+    def from_hash(opts)
       opts = opts.with_indifferent_access
 
       if opts[:uri].present?
