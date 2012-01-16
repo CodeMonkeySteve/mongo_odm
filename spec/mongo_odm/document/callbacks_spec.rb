@@ -93,7 +93,7 @@ describe MongoODM::Document::Callbacks do
       @parent.things = @docs = %w{red green blue}.map { |color|  doc_class.new( :color => color )  }
     end
 
-    it "save callbacks" do
+     it "save callbacks" do
       @docs.each  do |doc|
         doc.should_receive(:on_before_save).once.and_return(true)
         doc.should_receive(:on_after_save).once.and_return(true)

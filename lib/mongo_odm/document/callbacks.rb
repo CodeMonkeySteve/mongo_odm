@@ -32,7 +32,7 @@ module MongoODM
             objs.select! { |val|  val.respond_to?(:run_callbacks) || val.kind_of?(Array)  }
             if objs.present?
               Callbacks.run_multiple( objs, 0, kind, *args, &blk )
-            else
+            elsif blk
               blk.call(self)
             end
           end
@@ -49,7 +49,7 @@ module MongoODM
           break  if obj.respond_to?(:run_callbacks) || obj.kind_of?(Array)
           idx += 1
         end
-        return blk.call(self)  unless obj
+        return blk && blk.call(self)  if !obj
 
         # warning: recursion ahead
         if obj.kind_of?(Array)
