@@ -18,16 +18,14 @@ module MongoODM
           protected :define_method_attribute?
         end
 
-        module InstanceMethods
-          def query_attribute(attr_name)
-            !!@attributes[attr_name]
-          end
-
-          def attribute?(attr_name)
-            query_attribute(attr_name)
-          end
-          private :attribute?
+        def query_attribute(attr_name)
+          !!@attributes[attr_name]
         end
+
+        def attribute?(attr_name)
+          query_attribute(attr_name)
+        end
+        private :attribute?
 
       end
     end

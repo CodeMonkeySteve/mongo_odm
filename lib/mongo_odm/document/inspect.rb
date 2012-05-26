@@ -13,14 +13,12 @@ module MongoODM
         end
       end
     
-      module InstanceMethods
-        def private_attribute_names
-          %w(_class)
-        end
-      
-        def inspect
-          "#<#{self.class.name} #{attributes.except(*private_attribute_names).keys.sort.map{|k| inspect_attribute(k)}.join(", ")}>"
-        end
+      def private_attribute_names
+        %w(_class)
+      end
+
+      def inspect
+        "#<#{self.class.name} #{attributes.except(*private_attribute_names).keys.sort.map{|k| inspect_attribute(k)}.join(", ")}>"
       end
 
     end

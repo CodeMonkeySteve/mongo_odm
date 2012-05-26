@@ -44,24 +44,22 @@ module MongoODM
           protected :define_method_attribute_localized=
         end
 
-        module InstanceMethods        
-          def read_localized_attribute(attr_name, locale = nil)
-            locale = I18n.locale || I18n.default_locale if locale.nil?
-            (read_attribute(attr_name) || {}.with_indifferent_access)[locale]
-          end
+        def read_localized_attribute(attr_name, locale = nil)
+          locale = I18n.locale || I18n.default_locale if locale.nil?
+          (read_attribute(attr_name) || {}.with_indifferent_access)[locale]
+        end
 
-          def write_localized_attribute(attr_name, value, locale = nil)
-            locale = I18n.locale || I18n.default_locale if locale.nil?
-            current_value = read_attribute(attr_name) || {}.with_indifferent_access
-            write_attribute(attr_name, current_value.merge(locale => value))
-          end
-          
-          def inspect_attribute_with_localization(attr_name)
-            if self.class.localized_attribute?(attr_name)
-              "#{attr_name}[:#{I18n.locale}]: #{read_localized_attribute(attr_name).inspect}"
-            else
-              inspect_attribute_without_localization(attr_name)
-            end
+        def write_localized_attribute(attr_name, value, locale = nil)
+          locale = I18n.locale || I18n.default_locale if locale.nil?
+          current_value = read_attribute(attr_name) || {}.with_indifferent_access
+          write_attribute(attr_name, current_value.merge(locale => value))
+        end
+
+        def inspect_attribute_with_localization(attr_name)
+          if self.class.localized_attribute?(attr_name)
+            "#{attr_name}[:#{I18n.locale}]: #{read_localized_attribute(attr_name).inspect}"
+          else
+            inspect_attribute_without_localization(attr_name)
           end
         end
 

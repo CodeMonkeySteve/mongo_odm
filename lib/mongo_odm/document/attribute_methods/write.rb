@@ -18,18 +18,16 @@ module MongoODM
           protected :define_method_attribute=
         end
 
-        module InstanceMethods          
-          def write_attribute(attr_name, value)
-            field = self.class.fields[attr_name]
-            type = field ? field.type : value.class
-            @attributes[attr_name] = attr_name.to_sym == :_id ? value : type.type_cast(value)
-          end
-
-          def attribute=(attr_name, value)
-            write_attribute(attr_name, value)
-          end
-          private :attribute=
+        def write_attribute(attr_name, value)
+          field = self.class.fields[attr_name]
+          type = field ? field.type : value.class
+          @attributes[attr_name] = attr_name.to_sym == :_id ? value : type.type_cast(value)
         end
+
+        def attribute=(attr_name, value)
+          write_attribute(attr_name, value)
+        end
+        private :attribute=
 
       end
     end

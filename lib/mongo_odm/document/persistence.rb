@@ -8,65 +8,63 @@ module MongoODM
 
       extend ActiveSupport::Concern
 
-      module InstanceMethods
-        def id
-          attributes[:_id]
-        end
+      def id
+        attributes[:_id]
+      end
 
-        def to_param
-          id.to_s
-        end
+      def to_param
+        id.to_s
+      end
 
-        def new_record?
-          id.nil?
-        end
+      def new_record?
+        id.nil?
+      end
 
-        def persisted?
-          !new_record?
-        end
+      def persisted?
+        !new_record?
+      end
 
-        def reload
-          self.load_attributes_or_defaults(self.class.find_one(:_id => id).attributes) unless new_record?
-          self
-        end
+      def reload
+        self.load_attributes_or_defaults(self.class.find_one(:_id => id).attributes) unless new_record?
+        self
+      end
 
-        # Save a document to its collection.
-        #
-        # @return [ObjectId] the _id of the saved document.
-        #
-        # @option opts [Boolean] :safe (+false+)
-        #   If true, check that the save succeeded. OperationFailure
-        #   will be raised on an error. Note that a safe check requires an extra
-        #   round-trip to the database.
-        def save(options = {})
-          _run_save_callbacks do
-            write_attribute(:_id, self.class.save(to_mongo, options))
-          end
-          self
+      # Save a document to its collection.
+      #
+      # @return [ObjectId] the _id of the saved document.
+      #
+      # @option opts [Boolean] :safe (+false+)
+      #   If true, check that the save succeeded. OperationFailure
+      #   will be raised on an error. Note that a safe check requires an extra
+      #   round-trip to the database.
+      def save(options = {})
+        _run_save_callbacks do
+          write_attribute(:_id, self.class.save(to_mongo, options))
         end
+        self
+      end
 
-        def save!(options = {})
-          valid? or raise(Errors::Validation, self)
-          save(options.merge(:validate => false))
+      def save!(options = {})
+        valid? or raise(Errors::Validation, self)
+        save(options.merge(:validate => false))
+      end
+
+      def update_attributes(attributes)
+        self.attributes = attributes
+        save
+      end
+
+      def destroy
+        return false if new_record?
+        _run_destroy_callbacks do
+          self.class.remove({ :_id => self.id })
         end
+      end
 
-        def update_attributes(attributes)
-          self.attributes = attributes
-          save
-        end
-
-        def destroy
-          return false if new_record?
-          _run_destroy_callbacks do
-            self.class.remove({ :_id => self.id })
-          end
-        end
-
-        def to_mongo
-          attributes.inject({}) do |attrs, (key, value)|
-            attrs[key] = value.to_mongo unless value.nil? # self.class.fields[key].default == value
-            attrs
-          end
+      def to_mongo
+        attributes.inject({}) do |attrs, (key, value)|
+          attrs[key] = value.to_mongo unless value.nil? # self.class.fields[key].default == value
+          attrs
         end
       end
 

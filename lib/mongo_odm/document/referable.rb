@@ -29,19 +29,17 @@ module MongoODM
         end
       end
 
-      module InstanceMethods
-        Reference = MongoODM::Reference
+      Reference = MongoODM::Reference
 
-        def to_dbref
-          raise Errors::ReferenceNewRecord if new_record?
-          BSON::DBRef.new(self.class.collection.name, _id)
-        end
-
-        def reference
-          Reference.new self.to_dbref
-        end
-        alias ref reference
+      def to_dbref
+        raise Errors::ReferenceNewRecord if new_record?
+        BSON::DBRef.new(self.class.collection.name, _id)
       end
+
+      def reference
+        Reference.new self.to_dbref
+      end
+      alias ref reference
     end
   end
 end

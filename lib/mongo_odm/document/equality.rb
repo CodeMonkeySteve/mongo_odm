@@ -5,15 +5,13 @@ module MongoODM
 
       extend ActiveSupport::Concern
 
-      module InstanceMethods
-        def eql?(other)
-          other.is_a?(self.class) && _id == other._id && attributes == other.attributes
-        end
-        alias :== :eql?
-        
-        def hash
-          _id.hash
-        end
+      def eql?(other)
+        other.is_a?(self.class) && _id == other._id && attributes == other.attributes
+      end
+      alias :== :eql?
+
+      def hash
+        _id.hash
       end
 
     end

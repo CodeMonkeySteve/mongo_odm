@@ -6,11 +6,9 @@ module MongoODM
       module Inspect
 
         extend ActiveSupport::Concern
-        
-        module InstanceMethods
-          def inspect_attribute(attr_name)
-            "#{attr_name}: #{read_attribute(attr_name).inspect}"
-          end
+
+        def inspect_attribute(attr_name)
+          "#{attr_name}: #{read_attribute(attr_name).inspect}"
         end
 
       end

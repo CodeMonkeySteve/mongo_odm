@@ -17,12 +17,10 @@ module MongoODM
         define_model_callbacks :validate, :only => :before
       end
 
-      module InstanceMethods
-        def initialize_with_callbacks(*args)
-          initialize_without_callbacks(*args)
-          run_callbacks(:initialize)
-          self
-        end
+      def initialize_with_callbacks(*args)
+        initialize_without_callbacks(*args)
+        run_callbacks(:initialize)
+        self
       end
 
     end

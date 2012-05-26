@@ -11,12 +11,10 @@ module MongoODM
         before_save :set_timestamps
       end
 
-      module InstanceMethods
-        def set_timestamps
-          now = Time.now
-          self.created_at ||= now if self.new_record?
-          self.updated_at = now
-        end
+      def set_timestamps
+        now = Time.now
+        self.created_at ||= now if self.new_record?
+        self.updated_at = now
       end
 
     end
