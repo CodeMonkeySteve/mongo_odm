@@ -7,7 +7,7 @@ module MongoODM
 
       extend ActiveSupport::Concern
       extend ActiveSupport::Autoload
-      
+
       autoload :UniquenessValidator
 
       included do
@@ -15,7 +15,7 @@ module MongoODM
 
         alias_method_chain :save, :validation
       end
-    
+
       # The validation process on save can be skipped by passing false. The regular Base#save method is
       # replaced with this when the validations module is mixed in, which it is by default.
       def save_with_validation(options=nil)
@@ -39,7 +39,7 @@ module MongoODM
         run_callbacks(:validate)
         errors.empty?
       end
-      
+
       module ClassMethods
         # Validates whether or not a field is unique against the documents in the
         # database.

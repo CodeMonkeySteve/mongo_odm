@@ -34,14 +34,14 @@ if Gem.available? 'rspec'
   require "rspec"
   require "rspec/core/rake_task"
   desc "Run all specs"
-  Rspec::Core::RakeTask.new(:spec) do |spec|
+  RSpec::Core::RakeTask.new(:spec) do |spec|
     spec.pattern = "spec/**/*_spec.rb"
   end
   
   ## rcov task
   if Gem.available? 'rcov'
     require 'rcov/rcovtask'
-    Rspec::Core::RakeTask.new(:rcov) do |spec|
+    RSpec::Core::RakeTask.new(:rcov) do |spec|
       spec.pattern = "spec/**/*_spec.rb"
       spec.rcov = true
     end
