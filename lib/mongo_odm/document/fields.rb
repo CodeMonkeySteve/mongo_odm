@@ -56,8 +56,15 @@ module MongoODM
           @fields ||= {}.with_indifferent_access
         end
 
-        def field(name, type = String, options = {})
-          fields[name] = Field.new(name, type, options)
+        def field(name, type_or_opts = nil, options = nil)
+          if !options && type_or_opts.is_a?(Hash)
+            options = type_or_opts
+            type = options[:type]
+          else
+            type = type_or_opts
+          end
+
+          fields[name] = Field.new( name, (type || String), (options || {}) )
           fields[name]
         end
       end

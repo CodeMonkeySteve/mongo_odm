@@ -30,7 +30,20 @@ describe MongoODM::Document::Fields do
       end
       
     end
-    
+
+    context "with a name and type option" do
+      
+      before do
+        class TestingFloat < BlankSlate; field :testing_float, type: Float; end
+      end
+      
+      it "adds the typed field to the class" do
+        TestingFloat.fields[:testing_float].should be_kind_of(MongoODM::Document::Fields::Field)
+        TestingFloat.fields[:testing_float].type.should == Float
+      end
+ 
+    end
+
   end
   
   describe ".fields" do
